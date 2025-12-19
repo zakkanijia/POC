@@ -1,0 +1,54 @@
+gdb --args ./bin/gcc/gpac -i poc_offbyone.ogg -o null
+
+Reading symbols from ./bin/gcc/gpac...
+(gdb) b filters/dmx_ogg.c:667
+(gdb) b filters/dmx_ogg.c:668
+(gdb) b filters/dmx_ogg.c:699
+(gdb) run
+
+Breakpoint 1, oggdmx_parse_tags (filter=0x519000012780, st=0x515000012280, 
+    data=0x529000055227 "ARTIST=A", '\276' <repeats 192 times>..., size=8) at filters/dmx_ogg.c:667
+667                     sep = data[t_size];
+(gdb) p (data+t_size == data+size)
+$2 = 1
+(gdb) printf "data=%p size=%u t_size=%u  (t_size==size? %d)\n", data, size, t_size, (data+t_size==data+size)
+data=0x529000055227 size=8 t_size=8  (t_size==size? 1)
+(gdb) printf "addr(data+size)=%p  bytes around end:\n", data+size
+addr(data+size)=0x52900005522f  bytes around end:
+(gdb) x/16bx data+size-8
+0x529000055227: 0x41    0x52    0x54    0x49    0x53    0x54    0x3d    0x41
+0x52900005522f: 0xbe    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe
+(gdb) c
+Continuing.
+
+Breakpoint 2, oggdmx_parse_tags (filter=0x519000012780, st=0x515000012280, 
+    data=0x529000055227 "ARTIST=A", '\276' <repeats 192 times>..., size=8) at filters/dmx_ogg.c:668
+668                     data[t_size] = 0;
+(gdb) printf "data=%p size=%u t_size=%u  (t_size==size? %d)\n", data, size, t_size, (data+t_size==data+size)
+data=0x529000055227 size=8 t_size=8  (t_size==size? 1)
+(gdb) printf "end bytes (before write):\n"
+end bytes (before write):
+(gdb) x/16bx data+size-8
+0x529000055227: 0x41    0x52    0x54    0x49    0x53    0x54    0x3d    0x41
+0x52900005522f: 0xbe    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe
+(gdb) next
+669                     if (!num_comments) {
+(gdb) printf "end bytes (after write 0):\n"
+end bytes (after write 0):
+(gdb) x/16bx data+size-8
+0x529000055227: 0x41    0x52    0x54    0x49    0x53    0x54    0x3d    0x41
+0x52900005522f: 0x00    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe
+(gdb) c
+Continuing.
+
+Breakpoint 3, oggdmx_parse_tags (filter=0x519000012780, st=0x515000012280, data=0x529000055227 "ARTIST=A", 
+    size=8) at filters/dmx_ogg.c:699
+699                     data[t_size] = sep;
+(gdb) printf "data=%p size=%u t_size=%u  (t_size==size? %d)\n", data, size, t_size, (data+t_size==data+size)
+data=0x529000055227 size=8 t_size=8  (t_size==size? 1)
+(gdb) printf "end bytes (after restore):\n"
+end bytes (after restore):
+(gdb) x/16bx data+size-8
+0x529000055227: 0x41    0x52    0x54    0x49    0x53    0x54    0x3d    0x41
+0x52900005522f: 0x00    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe    0xbe
+(gdb) 
