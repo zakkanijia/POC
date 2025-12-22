@@ -1,0 +1,70 @@
+
+CC=/usr/bin/gcc-12 CXX=/usr/bin/g++-12 ./configure --enable-sanitizer --enable-debug --enable-avi --sdl-cfg=/bin/false
+
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:symbolize=1:print_stacktrace=1 \
+UBSAN_OPTIONS=halt_on_error=1 \
+./bin/gcc/gpac -no-dynf -no-probe \
+  -i poc_avi_indx_wLongsPerEntry_2.avi:ext=avi avidmx inspect:deep=true
+=================================================================
+==1151146==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000002ef8 at pc 0x7c3e9a214e6d bp 0x7ffcc53532e0 sp 0x7ffcc53532d0
+WRITE of size 4 at 0x602000002ef8 thread T0
+    #0 0x7c3e9a214e6c in avi_parse_input_file media_tools/avilib.c:2204
+    #1 0x7c3e9a20e46c in AVI_open_input_file media_tools/avilib.c:1841
+    #2 0x7c3e9aee46a6 in avidmx_process filters/dmx_avi.c:492
+    #3 0x7c3e9ac81bfb in gf_filter_process_task filter_core/filter.c:3143
+    #4 0x7c3e9ac1eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #5 0x7c3e9ac225de in gf_fs_run filter_core/filter_session.c:2451
+    #6 0x56da4a3d1923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #7 0x56da4a3d218e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #8 0x7c3e94829d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #9 0x7c3e94829e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #10 0x56da4a3c9674 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/gpac+0x5c674) (BuildId: a718e228ec573951410daeefbb806d0b124849c1)
+
+0x602000002ef8 is located 0 bytes after 8-byte region [0x602000002ef0,0x602000002ef8)
+allocated by thread T0 here:
+    #0 0x7c3ea10defdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x7c3e9900de6c in gf_malloc utils/alloc.c:150
+    #2 0x7c3e9a214a5b in avi_parse_input_file media_tools/avilib.c:2198
+    #3 0x7c3e9a20e46c in AVI_open_input_file media_tools/avilib.c:1841
+    #4 0x7c3e9aee46a6 in avidmx_process filters/dmx_avi.c:492
+    #5 0x7c3e9ac81bfb in gf_filter_process_task filter_core/filter.c:3143
+    #6 0x7c3e9ac1eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #7 0x7c3e9ac225de in gf_fs_run filter_core/filter_session.c:2451
+    #8 0x56da4a3d1923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #9 0x56da4a3d218e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #10 0x7c3e94829d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow media_tools/avilib.c:2204 in avi_parse_input_file
+Shadow bytes around the buggy address:
+  0x602000002c00: fa fa 00 00 fa fa fd fa fa fa 00 00 fa fa 00 00
+  0x602000002c80: fa fa 04 fa fa fa 00 00 fa fa fd fd fa fa 00 00
+  0x602000002d00: fa fa fd fd fa fa fd fd fa fa fd fd fa fa 00 00
+  0x602000002d80: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+  0x602000002e00: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+=>0x602000002e80: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00[fa]
+  0x602000002f00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000002f80: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003000: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==1151146==ABORTING
+Aborted
