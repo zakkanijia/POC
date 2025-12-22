@@ -1,4 +1,4 @@
-# CVE Submission Draft: GPAC AVI `indx` SuperIndex Heap Buffer Overflow
+# GPAC AVI `indx` SuperIndex Heap Buffer Overflow
 
 ## Summary
 GPAC contains a heap-based buffer overflow in its AVI (OpenDML) demuxer while parsing the `indx` (SuperIndex) chunk. A crafted AVI file can trigger an out-of-bounds heap write in `avi_parse_input_file()` (in `media_tools/avilib.c`), leading to a crash and potentially exploitable memory corruption.
