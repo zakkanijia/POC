@@ -1,0 +1,64 @@
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:symbolize=1:print_stacktrace=1:halt_on_error=1 \
+UBSAN_OPTIONS=halt_on_error=1 \
+./bin/gcc/MP4Box -ttxt 1 poc_tx3g_utf16_stack_overflow.mp4
+[iso file] Box "mvhd" (start 32) has 2 extra bytes
+=================================================================
+==2368695==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x788f0200cef0 at pc 0x788f10a70e93 bp 0x7ffddae45590 sp 0x7ffddae44d38
+WRITE of size 30000 at 0x788f0200cef0 thread T0
+    #0 0x788f10a70e92 in __interceptor_memcpy ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:899
+    #1 0x788f094a7966 in dump_ttxt_sample isomedia/box_dump.c:3605
+    #2 0x788f094acc16 in gf_isom_dump_ttxt_track isomedia/box_dump.c:3832
+    #3 0x788f094b43ba in gf_isom_text_dump isomedia/box_dump.c:4328
+    #4 0x5ad477644a51 in dump_isom_timed_text /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/mp4box/filedump.c:1994
+    #5 0x5ad4776297e8 in mp4box_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/mp4box/mp4box.c:6522
+    #6 0x5ad47762bacb in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/mp4box/mp4box.c:6950
+    #7 0x788f04229d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #8 0x788f04229e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #9 0x5ad4775e6d64 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/MP4Box+0x10ed64) (BuildId: 3a449d2ea2fdcf1f66aaae4fbf318be680c75155)
+
+Address 0x788f0200cef0 is located in stack of thread T0 at offset 20208 in frame
+    #0 0x788f094a6dcc in dump_ttxt_sample isomedia/box_dump.c:3574
+
+  This frame has 5 object(s):
+    [48, 52) 'j' (line 3576)
+    [64, 72) 'str' (line 3608)
+    [96, 176) 'shift_offset' (line 3577)
+    [208, 20208) 'utf16Line' (line 3601)
+    [20464, 20564) 'szDur' (line 3579) <== Memory access at offset 20208 partially underflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:899 in __interceptor_memcpy
+Shadow bytes around the buggy address:
+  0x788f0200cc00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x788f0200cc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x788f0200cd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x788f0200cd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x788f0200ce00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x788f0200ce80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00[f2]f2
+  0x788f0200cf00: f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2
+  0x788f0200cf80: f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 f2 00 00
+  0x788f0200d000: 00 00 00 00 00 00 00 00 00 00 04 f3 f3 f3 f3 f3
+  0x788f0200d080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x788f0200d100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==2368695==ABORTING
+Aborted
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ 
