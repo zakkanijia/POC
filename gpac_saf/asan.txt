@@ -1,0 +1,12 @@
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ UBSAN_OPTIONS=halt_on_error=0:print_stacktrace=1 ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:symbolize=1:print_stacktrace=1 ./bin/gcc/gpac -i poc_saf_stack_oob_streaminfo.saf inspect:deep -o null
+filters/dmx_saf.c:282:7: runtime error: index 1024 out of bounds for type 'StreamInfo [1024]'
+    #0 0x7361963c8a16 in safdmx_check_dur filters/dmx_saf.c:282
+    #1 0x7361963ca903 in safdmx_process filters/dmx_saf.c:396
+    #2 0x736196081bfb in gf_filter_process_task filter_core/filter.c:3143
+    #3 0x73619601eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #4 0x7361960225de in gf_fs_run filter_core/filter_session.c:2451
+    #5 0x5af4fd09e923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #6 0x5af4fd09f18e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #7 0x73618fc29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #8 0x73618fc29e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #9 0x5af4fd096674 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/gpac+0x5c674)
