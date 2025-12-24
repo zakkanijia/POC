@@ -1,0 +1,57 @@
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:symbolize=1:print_stacktrace=1 UBSAN_OPTIONS=halt_on_error=1 ./bin/gcc/gpac -i poc_rfpcm_reverse_stack_overflow.wav rfpcm inspect:deep:speed=-1 -o null
+=================================================================
+==3119641==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x70049a50bb94 at pc 0x7004a9670e93 bp 0x7ffdb3fd4dc0 sp 0x7ffdb3fd4568
+WRITE of size 128 at 0x70049a50bb94 thread T0
+    #0 0x7004a9670e92 in __interceptor_memcpy ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:899
+    #1 0x7004a3c43fb8 in pcmreframe_flush_packet filters/reframe_rawpcm.c:217
+    #2 0x7004a3c496ca in pcmreframe_process filters/reframe_rawpcm.c:425
+    #3 0x7004a3281bfb in gf_filter_process_task filter_core/filter.c:3143
+    #4 0x7004a321eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #5 0x7004a32225de in gf_fs_run filter_core/filter_session.c:2451
+    #6 0x5d33eeeb2923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #7 0x5d33eeeb318e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #8 0x70049ce29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #9 0x70049ce29e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #10 0x5d33eeeaa674 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/gpac+0x5c674) (BuildId: ed4ead6458dd68b8bac72d379ac694b70aa44328)
+
+Address 0x70049a50bb94 is located in stack of thread T0 at offset 148 in frame
+    #0 0x7004a3c439cf in pcmreframe_flush_packet filters/reframe_rawpcm.c:211
+
+  This frame has 1 object(s):
+    [48, 148) 'store' (line 216) <== Memory access at offset 148 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:899 in __interceptor_memcpy
+Shadow bytes around the buggy address:
+  0x70049a50b900: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x70049a50b980: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x70049a50ba00: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x70049a50ba80: f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5 f5
+  0x70049a50bb00: f1 f1 f1 f1 f1 f1 00 00 00 00 00 00 00 00 00 00
+=>0x70049a50bb80: 00 00[04]f3 f3 f3 f3 f3 00 00 00 00 00 00 00 00
+  0x70049a50bc00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x70049a50bc80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x70049a50bd00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x70049a50bd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x70049a50be00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3119641==ABORTING
+Aborted
