@@ -87,24 +87,7 @@ Because this is an **OOB read** (not a write), this issue is primarily stability
 
 ---
 
-## 6. Suggested Fix
-
-- Allocate `len+1` bytes and NUL-terminate:
-
-  - `magic = gf_malloc(len + 1);`
-  - `gf_bs_read_data(bs, magic, len);`
-  - `magic[len] = 0;`
-
-- Or, avoid `"%s"` entirely and log with an explicit length:
-
-  - `GF_LOG(..., ("... magic %.*s\n", len, magic));`
-
-- Harden the comparison:
-  - Compare lengths first (e.g., require `len == strlen(ctx->magic)`), then `memcmp` with the validated length.
-
----
-
-## 7. Attachments
+## 6. Attachments
 
 - `dmx_gsf.c` : affected code (context for magic parsing and logging)
 - `gen_poc_gsf_magic_oobread.py` : PoC generator script
