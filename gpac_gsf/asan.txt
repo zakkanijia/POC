@@ -1,0 +1,72 @@
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ ASAN_OPTIONS=halt_on_error=1:abort_on_error=1:detect_leaks=0:fast_unwind_on_malloc=0 ./bin/gcc/gpac -logs=all@debug -i poc_gsf_magic_oobread.gsf:gsfdmx:magic=ABCD inspect:deep
+[GSFDemux] found full packet on stream 0 type TUNE crypted 0 sn 0 size 11 block_offset 0, hdr size 3 at position 0
+=================================================================
+==3030665==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x6020000031f4 at pc 0x7e78d009508e bp 0x7ffd8a104970 sp 0x7ffd8a1040e8
+READ of size 5 at 0x6020000031f4 thread T0
+    #0 0x7e78d009508d in printf_common ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors_format.inc:553
+    #1 0x7e78d0095ac6 in __interceptor_vfprintf ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:1742
+    #2 0x7e78c800a116 in default_log_callback_color utils/error.c:826
+    #3 0x7e78c800a394 in gf_log utils/error.c:859
+    #4 0x7e78c9f47faf in gsfdmx_tune filters/dmx_gsf.c:589
+    #5 0x7e78c9f509fe in gsfdmx_demux filters/dmx_gsf.c:1135
+    #6 0x7e78c9f52b2a in gsfdmx_process filters/dmx_gsf.c:1272
+    #7 0x7e78c9c81bfb in gf_filter_process_task filter_core/filter.c:3143
+    #8 0x7e78c9c1eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #9 0x7e78c9c225de in gf_fs_run filter_core/filter_session.c:2451
+    #10 0x5af3f659c923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #11 0x5af3f659d18e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #12 0x7e78c3829d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #13 0x7e78c3829e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #14 0x5af3f6594674 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/gpac+0x5c674) (BuildId: ed4ead6458dd68b8bac72d379ac694b70aa44328)
+
+0x6020000031f4 is located 0 bytes after 4-byte region [0x6020000031f0,0x6020000031f4)
+allocated by thread T0 here:
+    #0 0x7e78d00defdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x7e78c800de6c in gf_malloc utils/alloc.c:150
+    #2 0x7e78c9f47d95 in gsfdmx_tune filters/dmx_gsf.c:579
+    #3 0x7e78c9f509fe in gsfdmx_demux filters/dmx_gsf.c:1135
+    #4 0x7e78c9f52b2a in gsfdmx_process filters/dmx_gsf.c:1272
+    #5 0x7e78c9c81bfb in gf_filter_process_task filter_core/filter.c:3143
+    #6 0x7e78c9c1eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #7 0x7e78c9c225de in gf_fs_run filter_core/filter_session.c:2451
+    #8 0x5af3f659c923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #9 0x5af3f659d18e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #10 0x7e78c3829d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #11 0x7e78c3829e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #12 0x5af3f6594674 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/gpac+0x5c674) (BuildId: ed4ead6458dd68b8bac72d379ac694b70aa44328)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors_format.inc:553 in printf_common
+Shadow bytes around the buggy address:
+  0x602000002f00: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+  0x602000002f80: fa fa 00 00 fa fa fd fa fa fa fd fa fa fa 07 fa
+  0x602000003000: fa fa 05 fa fa fa 00 00 fa fa 00 00 fa fa 05 fa
+  0x602000003080: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+  0x602000003100: fa fa 00 00 fa fa 00 00 fa fa 00 00 fa fa 00 00
+=>0x602000003180: fa fa 00 00 fa fa 00 00 fa fa 00 06 fa fa[04]fa
+  0x602000003200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003380: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000003400: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3030665==ABORTING
+Aborted
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ 
