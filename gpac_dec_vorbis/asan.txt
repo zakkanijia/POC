@@ -1,0 +1,65 @@
+zakka@dell-PowerEdge-R750:~/Desktop/g2fuzz_eval/gpac-2.4.0$ ASAN_OPTIONS=abort_on_error=1:detect_leaks=0:symbolize=1:print_stacktrace=1 \
+UBSAN_OPTIONS=halt_on_error=1 \
+./bin/gcc/gpac -i poc_vorbis_6ch_heap_oobwrite.ogg oggdmx vorbisdec -o null
+=================================================================
+==1510242==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x61b000010280 at pc 0x70811f0a5f64 bp 0x7ffed6c85ea0 sp 0x7ffed6c85e90
+WRITE of size 2 at 0x61b000010280 thread T0
+    #0 0x70811f0a5f63 in vorbis_to_intern filters/dec_vorbis.c:199
+    #1 0x70811f0a6c10 in vorbisdec_process filters/dec_vorbis.c:252
+    #2 0x70811ee81bfb in gf_filter_process_task filter_core/filter.c:3143
+    #3 0x70811ee1eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #4 0x70811ee225de in gf_fs_run filter_core/filter_session.c:2451
+    #5 0x561f349dc923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #6 0x561f349dd18e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #7 0x708118a29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #8 0x708118a29e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #9 0x561f349d4674 in _start (/home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/bin/gcc/gpac+0x5c674) (BuildId: ed4ead6458dd68b8bac72d379ac694b70aa44328)
+
+0x61b000010280 is located 0 bytes after 1536-byte region [0x61b00000fc80,0x61b000010280)
+allocated by thread T0 here:
+    #0 0x7081252defdf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
+    #1 0x70811d20de6c in gf_malloc utils/alloc.c:150
+    #2 0x70811ed09fde in gf_filter_pck_new_alloc_internal filter_core/filter_pck.c:159
+    #3 0x70811ed0abcb in gf_filter_pck_new_alloc filter_core/filter_pck.c:197
+    #4 0x70811f0a6a80 in vorbisdec_process filters/dec_vorbis.c:242
+    #5 0x70811ee81bfb in gf_filter_process_task filter_core/filter.c:3143
+    #6 0x70811ee1eb59 in gf_fs_thread_proc filter_core/filter_session.c:2144
+    #7 0x70811ee225de in gf_fs_run filter_core/filter_session.c:2451
+    #8 0x561f349dc923 in gpac_main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1410
+    #9 0x561f349dd18e in main /home/zakka/Desktop/g2fuzz_eval/gpac-2.4.0/applications/gpac/gpac.c:1666
+    #10 0x708118a29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow filters/dec_vorbis.c:199 in vorbis_to_intern
+Shadow bytes around the buggy address:
+  0x61b000010000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x61b000010080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x61b000010100: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x61b000010180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x61b000010200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x61b000010280:[fa]fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x61b000010300: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x61b000010380: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x61b000010400: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x61b000010480: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x61b000010500: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==1510242==ABORTING
+Aborted
