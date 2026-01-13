@@ -1,0 +1,53 @@
+zakka@dell-PowerEdge-R750:~/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2$ ./giftool -d 1 < ./poc.gif > /dev/null
+=================================================================
+==585992==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x602000000031 at pc 0x5a3170f7cf51 bp 0x7fff87f9ed70 sp 0x7fff87f9ed68
+WRITE of size 1 at 0x602000000031 thread T0
+    #0 0x5a3170f7cf50 in EGifGCBToExtension /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/egif_lib.c:656:18
+    #1 0x5a3170f7db13 in EGifGCBToSavedExtension /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/egif_lib.c:681:4
+    #2 0x5a3170f518f3 in main /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/giftool.c:275:5
+    #3 0x7743c5029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #4 0x7743c5029e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #5 0x5a3170e90354 in _start (/home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/giftool+0x3a354) (BuildId: bb4c8049db34e8a7986f49a064d4ba7c2d3df754)
+
+0x602000000031 is located 0 bytes to the right of 1-byte region [0x602000000030,0x602000000031)
+allocated by thread T0 here:
+    #0 0x5a3170f1319e in __interceptor_malloc (/home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/giftool+0xbd19e) (BuildId: bb4c8049db34e8a7986f49a064d4ba7c2d3df754)
+    #1 0x5a3170f86ada in GifAddExtensionBlock /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/gifalloc.c:251:29
+    #2 0x5a3170f6ed04 in DGifSlurp /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/dgif_lib.c:1269:9
+    #3 0x5a3170f5089d in main /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/giftool.c:235:6
+    #4 0x7743c5029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/zakka/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2/egif_lib.c:656:18 in EGifGCBToExtension
+Shadow bytes around the buggy address:
+  0x0c047fff7fb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c047fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c047fff8000: fa fa 06 fa fa fa[01]fa fa fa 01 fa fa fa fa fa
+  0x0c047fff8010: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c047fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==585992==ABORTING
+zakka@dell-PowerEdge-R750:~/Desktop/geminiTalk/giflib/build-asan/giflib-5.2.2$ 
