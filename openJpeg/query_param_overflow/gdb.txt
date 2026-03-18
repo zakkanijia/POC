@@ -1,0 +1,60 @@
+wanghaoxu@b429-arm:/mnt/data/whx/Targets/openjpegpoc$ gdb -q "$POC_DIR/poc_openjpeg_query_dbg"
+Reading symbols from /mnt/data/whx/Targets/openjpegpoc/poc_openjpeg_query_dbg...
+(gdb) gdb -q "$POC_DIR/poc_openjpeg_query_dbg"
+Undefined command: "gdb".  Try "help".
+(gdb) break parse_req_box_prop if idx==10
+Breakpoint 1 at 0x401eb8: file /mnt/data/whx/Targets/openjpeg/src/lib/openjpip/query_parser.c, line 366.
+(gdb) run
+Starting program: /mnt/data/whx/Targets/openjpegpoc/poc_openjpeg_query_dbg 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+Downloading separate debug info for system-supplied DSO at 0xfffff7ffb000
+[Thread debugging using libthread_db enabled]                                                                                                                           
+Using host libthread_db library "/lib/aarch64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, parse_req_box_prop (req_box_prop=0xffffffffeae8 "kkkk!", idx=10, query_param=0x4212a0)
+    at /mnt/data/whx/Targets/openjpeg/src/lib/openjpip/query_parser.c:366
+366         if (*req_box_prop == '*') {
+(gdb) p idx
+$1 = 10
+(gdb) p &query_param->box_type[10]
+$2 = (char (*)[4]) 0x42131c
+(gdb) p &query_param->box_type[10]
+$3 = (char (*)[4]) 0x42131c
+(gdb) p &query_param->limit[0]
+$4 = (int *) 0x42131c
+(gdb) p &query_param->w[0]
+$5 = (OPJ_BOOL *) 0x421344
+(gdb) p &query_param->s[0]
+$6 = (OPJ_BOOL *) 0x42136c
+(gdb) p &query_param->g[0]
+$7 = (OPJ_BOOL *) 0x421394
+(gdb) p &query_param->a[0]
+$8 = (OPJ_BOOL *) 0x4213bc
+(gdb) p &query_param->priority[0]
+$9 = (OPJ_BOOL *) 0x4213e4
+(gdb) p query_param->priority[0]
+$10 = 1
+(gdb) next
+369             strncpy(query_param->box_type[idx], req_box_prop, 4);
+(gdb) p/x query_param->limit[0]
+$11 = 0x0
+(gdb) p/x query_param->limit[0]
+$12 = 0x0
+(gdb) p req_box_prop
+$13 = 0xffffffffeae8 "kkkk!"
+(gdb) p req_box_prop
+$14 = 0xffffffffeae8 "kkkk!"
+(gdb) x/8cb req_box_prop
+0xffffffffeae8: 107 'k' 107 'k' 107 'k' 107 'k' 33 '!'  0 '\000'        0 '\000'        0 '\000'
+(gdb) next
+372         if ((ptr = strchr(req_box_prop, ':'))) {
+(gdb) p/x query_param->limit[0]
+$15 = 0x6b6b6b6b
+(gdb) p/x query_param->limit[0]
+$16 = 0x6b6b6b6b
+(gdb) 
