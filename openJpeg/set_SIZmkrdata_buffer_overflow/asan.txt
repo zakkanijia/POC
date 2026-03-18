@@ -1,0 +1,58 @@
+zakka@dell-PowerEdge-R750:/home/dell/data/whx/readLLVM/openjpeg$ ./build-asan/bin/opj_jpip_test siz64.jp2
+=================================================================
+==4024361==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60d0000000d0 at pc 0x5fd5c59b8dc5 bp 0x7ffc5cc5c7d0 sp 0x7ffc5cc5c7c8
+WRITE of size 1 at 0x60d0000000d0 thread T0
+    #0 0x5fd5c59b8dc4 in set_SIZmkrdata /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/index_manager.c:667:23
+    #1 0x5fd5c59b748f in set_mainmhixdata /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/index_manager.c:481:5
+    #2 0x5fd5c59b5874 in set_cidxdata /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/index_manager.c:368:5
+    #3 0x5fd5c59b50f7 in parse_jp2file /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/index_manager.c:104:10
+    #4 0x5fd5c59a6267 in get_index_from_JP2file /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/openjpip.c:473:12
+    #5 0x5fd5c59a51a5 in main /home/dell/data/whx/readLLVM/openjpeg/src/bin/jpip/opj_jpip_test.c:65:20
+    #6 0x751fcaa29d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #7 0x751fcaa29e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #8 0x5fd5c58e7524 in _start (/home/dell/data/whx/readLLVM/openjpeg/build-asan/bin/opj_jpip_test+0x41524) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289)
+
+0x60d0000000d0 is located 0 bytes to the right of 144-byte region [0x60d000000040,0x60d0000000d0)
+allocated by thread T0 here:
+    #0 0x5fd5c596a36e in __interceptor_malloc (/home/dell/data/whx/readLLVM/openjpeg/build-asan/bin/opj_jpip_test+0xc436e) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289)
+    #1 0x5fd5c59a6e4d in opj_malloc /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjp2/opj_malloc.c:196:12
+    #2 0x5fd5c59b50e8 in parse_jp2file /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/index_manager.c:102:31
+    #3 0x5fd5c59a6267 in get_index_from_JP2file /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/openjpip.c:473:12
+    #4 0x5fd5c59a51a5 in main /home/dell/data/whx/readLLVM/openjpeg/src/bin/jpip/opj_jpip_test.c:65:20
+    #5 0x751fcaa29d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/dell/data/whx/readLLVM/openjpeg/src/lib/openjpip/index_manager.c:667:23 in set_SIZmkrdata
+Shadow bytes around the buggy address:
+  0x0c1a7fff7fc0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1a7fff7fd0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1a7fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1a7fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c1a7fff8000: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+=>0x0c1a7fff8010: 00 00 00 00 00 00 00 00 00 00[fa]fa fa fa fa fa
+  0x0c1a7fff8020: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8030: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c1a7fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==4024361==ABORTING
+Aborted
+zakka@dell-PowerEdge-R750:/home/dell/data/whx/readLLVM/openjpeg$ 
