@@ -1,0 +1,37 @@
+zakka@dell-PowerEdge-R750:/home/dell/data/whx/openjpeg$ export ASAN_OPTIONS="detect_leaks=0:abort_on_error=1:symbolize=1"
+./build-asan/bin/opj_jpip_test siz4.jp2
+Error: Boxheader tpix not found
+Error: tpix box not present in manfbox
+Error: Not correctl format in cidx box
+=================================================================
+==3985206==ERROR: AddressSanitizer: attempting double-free on 0x60d000000040 in thread T0:
+    #0 0x5f2c7f7840c2 in free (/home/dell/data/whx/openjpeg/build-asan/bin/opj_jpip_test+0xc40c2) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289)
+    #1 0x5f2c7f7c1458 in opj_free /home/dell/data/whx/openjpeg/src/lib/openjp2/opj_malloc.c:248:5
+    #2 0x5f2c7f7cf137 in parse_jp2file /home/dell/data/whx/openjpeg/src/lib/openjpip/index_manager.c:106:9
+    #3 0x5f2c7f7c0267 in get_index_from_JP2file /home/dell/data/whx/openjpeg/src/lib/openjpip/openjpip.c:473:12
+    #4 0x5f2c7f7bf1a5 in main /home/dell/data/whx/openjpeg/src/bin/jpip/opj_jpip_test.c:65:20
+    #5 0x7513e4029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #6 0x7513e4029e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #7 0x5f2c7f701524 in _start (/home/dell/data/whx/openjpeg/build-asan/bin/opj_jpip_test+0x41524) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289)
+
+0x60d000000040 is located 0 bytes inside of 144-byte region [0x60d000000040,0x60d0000000d0)
+freed by thread T0 here:
+    #0 0x5f2c7f7840c2 in free (/home/dell/data/whx/openjpeg/build-asan/bin/opj_jpip_test+0xc40c2) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289)
+    #1 0x5f2c7f7c1458 in opj_free /home/dell/data/whx/openjpeg/src/lib/openjp2/opj_malloc.c:248:5
+    #2 0x5f2c7f7cf9fa in set_cidxdata /home/dell/data/whx/openjpeg/src/lib/openjpip/index_manager.c
+    #3 0x5f2c7f7cf0f7 in parse_jp2file /home/dell/data/whx/openjpeg/src/lib/openjpip/index_manager.c:104:10
+    #4 0x5f2c7f7c0267 in get_index_from_JP2file /home/dell/data/whx/openjpeg/src/lib/openjpip/openjpip.c:473:12
+    #5 0x5f2c7f7bf1a5 in main /home/dell/data/whx/openjpeg/src/bin/jpip/opj_jpip_test.c:65:20
+    #6 0x7513e4029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+
+previously allocated by thread T0 here:
+    #0 0x5f2c7f78436e in __interceptor_malloc (/home/dell/data/whx/openjpeg/build-asan/bin/opj_jpip_test+0xc436e) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289)
+    #1 0x5f2c7f7c0e4d in opj_malloc /home/dell/data/whx/openjpeg/src/lib/openjp2/opj_malloc.c:196:12
+    #2 0x5f2c7f7cf0e8 in parse_jp2file /home/dell/data/whx/openjpeg/src/lib/openjpip/index_manager.c:102:31
+    #3 0x5f2c7f7c0267 in get_index_from_JP2file /home/dell/data/whx/openjpeg/src/lib/openjpip/openjpip.c:473:12
+    #4 0x5f2c7f7bf1a5 in main /home/dell/data/whx/openjpeg/src/bin/jpip/opj_jpip_test.c:65:20
+    #5 0x7513e4029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+
+SUMMARY: AddressSanitizer: double-free (/home/dell/data/whx/openjpeg/build-asan/bin/opj_jpip_test+0xc40c2) (BuildId: e9c21067769fad054872f6d2b74d640d969ce289) in free
+==3985206==ABORTING
+Aborted
