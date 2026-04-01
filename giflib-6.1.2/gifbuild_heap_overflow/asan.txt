@@ -1,0 +1,53 @@
+zakka@dell-PowerEdge-R750:/home/dell/data/giflib-6.1.2$ ASAN_OPTIONS=detect_leaks=0 ./gifbuild < /tmp/repro_gifbuild_union.txt > /dev/null
+=================================================================
+==3762391==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60200000002d at pc 0x5914bc5d5804 bp 0x7ffcd4727a70 sp 0x7ffcd4727a60
+READ of size 1 at 0x60200000002d thread T0
+    #0 0x5914bc5d5803 in GifUnionColorMap /home/dell/data/giflib-6.1.2/gifalloc.c:146
+    #1 0x5914bc5bbe68 in Icon2Gif /home/dell/data/giflib-6.1.2/gifbuild.c:327
+    #2 0x5914bc5bf2f3 in main /home/dell/data/giflib-6.1.2/gifbuild.c:77
+    #3 0x7fbbe1c29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #4 0x7fbbe1c29e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #5 0x5914bc5b58e4 in _start (/home/dell/data/giflib-6.1.2/gifbuild+0x438e4) (BuildId: f5851b13e2d13d26499d1ffbd45202cf04655bc7)
+
+0x60200000002d is located 3 bytes before 6-byte region [0x602000000030,0x602000000036)
+allocated by thread T0 here:
+    #0 0x7fbbe28de997 in __interceptor_calloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:77
+    #1 0x5914bc5d4f18 in GifMakeMapObject /home/dell/data/giflib-6.1.2/gifalloc.c:58
+    #2 0x5914bc5bb56a in Icon2Gif /home/dell/data/giflib-6.1.2/gifbuild.c:277
+    #3 0x5914bc5bf2f3 in main /home/dell/data/giflib-6.1.2/gifbuild.c:77
+    #4 0x7fbbe1c29d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /home/dell/data/giflib-6.1.2/gifalloc.c:146 in GifUnionColorMap
+Shadow bytes around the buggy address:
+  0x601ffffffd80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x601ffffffe00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x601ffffffe80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x601fffffff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x601fffffff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x602000000000: fa fa 03 fa fa[fa]06 fa fa fa fa fa fa fa fa fa
+  0x602000000080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000000100: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000000180: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000000200: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x602000000280: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3762391==ABORTING
+zakka@dell-PowerEdge-R750:/home/dell/data/giflib-6.1.2$ 
