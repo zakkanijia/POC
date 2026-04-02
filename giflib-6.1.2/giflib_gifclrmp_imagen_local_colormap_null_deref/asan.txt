@@ -1,0 +1,19 @@
+zakka@dell-PowerEdge-R750:/home/dell/data/giflib-6.1.2$ ASAN_OPTIONS=detect_leaks=0 ./gifclrmp -i 1 local_only.gif > /dev/null
+gifclrmp.c:324:29: runtime error: member access within null pointer of type 'ColorMapObject' (aka 'struct ColorMapObject')
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior gifclrmp.c:324:29 in 
+gifclrmp.c:324:29: runtime error: load of null pointer of type 'int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior gifclrmp.c:324:29 in 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==3915334==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x5b246bf2b6af bp 0x7ffefcf16770 sp 0x7ffefcf16620 T0)
+==3915334==The signal is caused by a READ memory access.
+==3915334==Hint: address points to the zero page.
+    #0 0x5b246bf2b6af in ModifyColorMap /home/dell/data/giflib-6.1.2/gifclrmp.c:324:29
+    #1 0x5b246bf28e9f in main /home/dell/data/giflib-6.1.2/gifclrmp.c:164:9
+    #2 0x7b2879c29d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #3 0x7b2879c29e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #4 0x5b246be6a374 in _start (/home/dell/data/giflib-6.1.2/gifclrmp+0x3a374) (BuildId: fa8238ad0ab22fb946094cd3e77d71062afdb1cd)
+
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /home/dell/data/giflib-6.1.2/gifclrmp.c:324:29 in ModifyColorMap
+==3915334==ABORTING

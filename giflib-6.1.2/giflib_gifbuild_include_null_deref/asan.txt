@@ -1,0 +1,20 @@
+zakka@dell-PowerEdge-R750:/home/dell/data/giflib-6.1.2$ ASAN_OPTIONS=detect_leaks=0 ./gifbuild < repro_gifbuild_local_only.txt > /dev/null
+gifalloc.c:125:6: runtime error: member access within null pointer of type 'const ColorMapObject' (aka 'const struct ColorMapObject')
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior gifalloc.c:125:6 in 
+gifalloc.c:125:6: runtime error: load of null pointer of type 'const int'
+SUMMARY: UndefinedBehaviorSanitizer: undefined-behavior gifalloc.c:125:6 in 
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==3912882==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000000 (pc 0x573554a5b3a0 bp 0x7ffee78ad970 sp 0x7ffee78ad8c0 T0)
+==3912882==The signal is caused by a READ memory access.
+==3912882==Hint: address points to the zero page.
+    #0 0x573554a5b3a0 in GifUnionColorMap /home/dell/data/giflib-6.1.2/gifalloc.c:125:6
+    #1 0x573554a36ba9 in Icon2Gif /home/dell/data/giflib-6.1.2/gifbuild.c:327:16
+    #2 0x573554a31714 in main /home/dell/data/giflib-6.1.2/gifbuild.c:77:4
+    #3 0x7cf6b1029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #4 0x7cf6b1029e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #5 0x573554973384 in _start (/home/dell/data/giflib-6.1.2/gifbuild+0x40384) (BuildId: d4658549ccaf1fb20d337c986cf9b8a5b913b825)
+
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV /home/dell/data/giflib-6.1.2/gifalloc.c:125:6 in GifUnionColorMap
+==3912882==ABORTING
