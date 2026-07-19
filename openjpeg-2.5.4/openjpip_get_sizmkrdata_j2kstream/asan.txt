@@ -1,0 +1,51 @@
+=================================================================
+==3261416==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fff8dc6aaf8 at pc 0x5d0864f7d9cf bp 0x7fff8dc6aa40 sp 0x7fff8dc6aa38
+WRITE of size 1 at 0x7fff8dc6aaf8 thread T0
+    #0 0x5d0864f7d9ce in get_SIZmkrdata_from_j2kstream /path/to/openjpeg/src/lib/openjpip/j2kheader_manager.c:112:22
+    #1 0x5d0864f7d417 in get_mainheader_from_j2kstream /path/to/openjpeg/src/lib/openjpip/j2kheader_manager.c:61:16
+    #2 0x5d0864f7d12f in main /path/to/harness/harness_j2kheader.c:47:10
+    #3 0x7607d9029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #4 0x7607d9029e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #5 0x5d0864ebf374 in _start (/path/to/harness/harness_j2kheader_asanonly+0x1e374) (BuildId: 138c4bbb9a03bea75eeb72ebe4bd0e8e42fdf6a2)
+
+Address 0x7fff8dc6aaf8 is located in stack of thread T0 at offset 88 in frame
+    #0 0x5d0864f7d2ef in get_mainheader_from_j2kstream /path/to/openjpeg/src/lib/openjpip/j2kheader_manager.c:54
+
+  This frame has 2 object(s):
+    [32, 88) 'tmp' (line 61) <== Memory access at offset 88 overflows this variable
+    [128, 160) 'tmp26' (line 74)
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow /path/to/openjpeg/src/lib/openjpip/j2kheader_manager.c:112:22 in get_SIZmkrdata_from_j2kstream
+Shadow bytes around the buggy address:
+  0x100071b85500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100071b85510: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100071b85520: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100071b85530: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100071b85540: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x100071b85550: 00 00 00 00 f1 f1 f1 f1 00 00 00 00 00 00 00[f2]
+  0x100071b85560: f2 f2 f2 f2 f8 f8 f8 f8 f3 f3 f3 f3 00 00 00 00
+  0x100071b85570: 00 00 00 00 00 00 00 00 00 00 00 00 f1 f1 f1 f1
+  0x100071b85580: 00 00 00 00 00 00 00 f3 f3 f3 f3 f3 00 00 00 00
+  0x100071b85590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100071b855a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3261416==ABORTING

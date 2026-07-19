@@ -1,0 +1,51 @@
+=================================================================
+==3260869==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fff26e69554 at pc 0x57ea5a6d92ad bp 0x7fff26e69510 sp 0x7fff26e68cd0
+WRITE of size 21 at 0x7fff26e69554 thread T0
+    #0 0x57ea5a6d92ac in __interceptor_strncpy (/path/to/harness/harness_query+0x8c2ac) (BuildId: db6fd5741ea3ff99f9672c448677f4a28075614c)
+    #1 0x7a691a73e3c4 in parse_metareq /path/to/openjpeg/src/lib/openjpip/query_parser.c:345:5
+    #2 0x7a691a73d033 in parse_query /path/to/openjpeg/src/lib/openjpip/query_parser.c:144:17
+    #3 0x57ea5a728fac in main /path/to/harness/harness_query.c:28:9
+    #4 0x7a691a029d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #5 0x7a691a029e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #6 0x57ea5a66b334 in _start (/path/to/harness/harness_query+0x1e334) (BuildId: db6fd5741ea3ff99f9672c448677f4a28075614c)
+
+Address 0x7fff26e69554 is located in stack of thread T0 at offset 52 in frame
+    #0 0x7a691a73e1ff in parse_metareq /path/to/openjpeg/src/lib/openjpip/query_parser.c:322
+
+  This frame has 1 object(s):
+    [32, 52) 'req_box_prop' (line 323) <== Memory access at offset 52 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow (/path/to/harness/harness_query+0x8c2ac) (BuildId: db6fd5741ea3ff99f9672c448677f4a28075614c) in __interceptor_strncpy
+Shadow bytes around the buggy address:
+  0x100064dc5250: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100064dc5260: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100064dc5270: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100064dc5280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100064dc5290: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x100064dc52a0: 00 00 00 00 f1 f1 f1 f1 00 00[04]f3 f3 f3 f3 f3
+  0x100064dc52b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100064dc52c0: 00 00 00 00 f1 f1 f1 f1 00 02 f2 f2 00 00 00 00
+  0x100064dc52d0: 00 00 00 00 00 00 00 00 00 00 00 00 f3 f3 f3 f3
+  0x100064dc52e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x100064dc52f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3260869==ABORTING

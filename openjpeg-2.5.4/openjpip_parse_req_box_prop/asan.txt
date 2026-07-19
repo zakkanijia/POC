@@ -1,0 +1,53 @@
+=================================================================
+==3260874==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x6130000001c0 at pc 0x556b5776f75e bp 0x7ffce8851ff0 sp 0x7ffce8851fe8
+WRITE of size 4 at 0x6130000001c0 thread T0
+    #0 0x556b5776f75d in parse_req_box_prop /path/to/openjpeg/src/lib/openjpip/query_parser.c:400:29
+    #1 0x556b5776e069 in parse_metareq /path/to/openjpeg/src/lib/openjpip/query_parser.c:337:13
+    #2 0x556b5776d7b0 in parse_query /path/to/openjpeg/src/lib/openjpip/query_parser.c:144:17
+    #3 0x556b5776cf81 in main /path/to/harness/harness_query.c:28:9
+    #4 0x7ae8d1c29d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+    #5 0x7ae8d1c29e3f in __libc_start_main csu/../csu/libc-start.c:392:3
+    #6 0x556b576af324 in _start (/path/to/harness/harness_query_direct_asanonly+0x1f324) (BuildId: 4357f3d1147ccea17d587e70b55c0375e343882e)
+
+0x6130000001c0 is located 0 bytes to the right of 384-byte region [0x613000000040,0x6130000001c0)
+allocated by thread T0 here:
+    #0 0x556b5773216e in __interceptor_malloc (/path/to/harness/harness_query_direct_asanonly+0xa216e) (BuildId: 4357f3d1147ccea17d587e70b55c0375e343882e)
+    #1 0x556b5776f97d in opj_malloc /path/to/openjpeg/src/lib/openjp2/opj_malloc.c:196:12
+    #2 0x556b5776d202 in get_initquery /path/to/openjpeg/src/lib/openjpip/query_parser.c:175:30
+    #3 0x556b5776d202 in parse_query /path/to/openjpeg/src/lib/openjpip/query_parser.c:94:19
+    #4 0x556b5776cf81 in main /path/to/harness/harness_query.c:28:9
+    #5 0x7ae8d1c29d8f in __libc_start_call_main csu/../sysdeps/nptl/libc_start_call_main.h:58:16
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow /path/to/openjpeg/src/lib/openjpip/query_parser.c:400:29 in parse_req_box_prop
+Shadow bytes around the buggy address:
+  0x0c267fff7fe0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c267fff7ff0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c267fff8000: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
+  0x0c267fff8010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x0c267fff8020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x0c267fff8030: 00 00 00 00 00 00 00 00[fa]fa fa fa fa fa fa fa
+  0x0c267fff8040: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c267fff8050: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c267fff8060: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c267fff8070: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x0c267fff8080: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==3260874==ABORTING
